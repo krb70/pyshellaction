@@ -12,7 +12,7 @@ jobs:
               uses: actions/checkout@v2
             - name: A
               id: abc
-              uses: krb70/pyshellaction/cond@v1
+              uses: krb70/pyshellaction/cond@e6fa115d6af1ba89f5a4acb8855a194289e9974c
               with:
                 cond: ${{ github.ref_name == 'main' || github.ref_name == 'refs/heads/main' }}
                 if_true: |
