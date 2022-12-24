@@ -20,12 +20,14 @@ runs:
   steps:
     - shell: python 
       id: result 
+      env:
+        COND: ${{ inputs.cond }}
+        IFTRUE: ${{ inputs.if_true }}
+        IFFALSE: ${{ inputs.if_false }}
       run: |
           import os, uuid
-          # make sure to handle multi-line strings
-          val = ("""${{ inputs.if_true }}"""
-                 if '${{ inputs.cond }}'.lower()[0] == 't'
-                 else """${{ inputs.if_false }}""")
-          delim = 'hex' + uuid.uuid4().hex
+          e = os.environ
+          val = (e['IFTRUE'] if e['COND'].lower()[0] == 't' else e['IFFALSE'])
+          delim = 'delim_' + uuid.uuid4().hex
           with open(os.environ['GITHUB_OUTPUT'], 'a') as f:
               f.write(f"""value<<{delim}\n{val}\n{delim}\n""")
