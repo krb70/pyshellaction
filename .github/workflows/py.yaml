@@ -1,0 +1,20 @@
+
+name: pyshell
+on: [push]
+jobs:
+    build:
+        name: py shell
+        runs-on: [ubuntu-latest]
+        env:
+            V1: hello
+            V2: world
+        steps:
+            - name: A
+              shell: python
+              run: |
+                 import subprocess
+                 import os, sys
+                 print(f"{os.getenv('V1')}")
+                 print(sys.version)
+                 subprocess.check_call(["pwd"])
+
