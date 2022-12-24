@@ -15,14 +15,21 @@ jobs:
               uses: krb70/pyshellaction/cond@v1
               with:
                 cond: ${{ github.ref_name == 'main' || github.ref_name == 'refs/heads/main' }}
-                if_true: prod
-                if_false: dev
+                if_true: |
+                  Long
+                  multiline string
+                  to return
+                if_false: |
+                  Another
+                  multiline string
+                  to set 
             - name: C
               id: c
               shell: python
               run: |
                  import subprocess
                  import os, sys, shlex
+                 print("${{ github.ref_name }}")
                  print("""${{ steps.abc.outputs.value }}""")
                  print(sys.version)
                  subprocess.check_call(shlex.split("pwd"))
