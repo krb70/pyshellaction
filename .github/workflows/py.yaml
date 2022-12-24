@@ -6,15 +6,24 @@ jobs:
         name: py shell
         runs-on: [ubuntu-latest]
         env:
-            V1: hello
-            V2: world
+            REF_NAME: ${{ github.ref_name }}
         steps:
+            - name: checkout
+              uses: actions/checkout@v2
             - name: A
+              id: abc
+              uses: krb70/pyshellaction/cond@v1
+              with:
+                cond: ${{ github.ref_name == 'main' || github.ref_name == 'refs/heads/main' }}
+                if_true: prod
+                if_false: dev
+            - name: C
+              id: c
               shell: python
               run: |
                  import subprocess
-                 import os, sys
-                 print(f"{os.getenv('V1')}")
+                 import os, sys, shlex
+                 print("""${{ steps.abc.outputs.value }}""")
                  print(sys.version)
-                 subprocess.check_call(["pwd"])
+                 subprocess.check_call(shlex.split("pwd"))
 

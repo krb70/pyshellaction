@@ -1,0 +1,31 @@
+name: 'Conditional value'
+description: 'Conditional value'
+author: 'krb70'
+inputs:
+  cond:
+    description: 'condition. [true,false]'
+    required: true
+  if_true:
+    description: 'output value if cond is true'
+    default: ''
+  if_false:
+    description: 'output value if cond is false'
+    default: ''
+outputs:
+  value:
+    description: 'output value'
+    value: ${{ steps.result.outputs.value }}
+runs:
+  using: composite
+  steps:
+    - shell: python 
+      id: result 
+      run: |
+          import os, uuid
+          # make sure to handle multi-line strings
+          val = ("""${{ inputs.if_true }}"""
+                 if '${{ inputs.cond }}'.lower()[0] == 't'
+                 else """${{ inputs.if_false }}""")
+          delim = 'hex' + uuid.uuid4().hex
+          with open(os.environ['GITHUB_OUTPUT'], 'a') as f:
+              f.write(f"""value<<{delim}\n{val}\n{delim}\n""")
